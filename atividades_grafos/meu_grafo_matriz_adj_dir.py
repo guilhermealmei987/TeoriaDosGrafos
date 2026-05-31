@@ -1,5 +1,6 @@
 from bibgrafo.grafo_matriz_adj_dir import *
 from bibgrafo.grafo_errors import *
+import heapq
 
 class MeuGrafo(GrafoMatrizAdjacenciaDirecionado):
 
@@ -60,28 +61,114 @@ class MeuGrafo(GrafoMatrizAdjacenciaDirecionado):
         '''
         pass
 
+
     def warshall(self):
         '''
         Provê a matriz de alcançabilidade de Warshall do grafo
         :return: Uma lista de listas que representa a matriz de alcançabilidade de Warshall associada ao grafo
         '''
         n = len(self.vertices)
+        #Construir matriz com 0 e 1
         clone = [[0 for _ in range(n)] for _ in range(n)]
         for i in range(n):
             for j in range(n):
                 #se existe aresta
                 if (self.matriz[i][j] != {}):
                     clone[i][j] = 1
+
         for i in range(n):
             for j in range(n):
+                #se tiver aresta. olha por coluna
                 if clone[j][i] == 1:
                     for k in range(n):
+                        #verifica se há aresta na linha correspondente
                         clone[j][k] = max(clone[j][k], clone[i][k])
         return clone
-    
+
+    #. ..- / -. .- --- / .- --. ..- . -. - --- / -- .- .. ... / ... --- -.-. --- .-. .-. ---
     def menor_caminho(self, Vi, Vf):
-        for i in self.arestas:
-            if (i.peso < 0):
-                return False
+        if not (self.existe_rotulo_vertice(Vi) and self.existe_rotulo_vertice(Vf)):
+            raise VerticeInvalidoError       
+        
+        n = len(self.vertices)
+        clone = [[float('inf') for _ in range(n)] for _ in range(n)]
+        
+        # Construcao da matriz
+        for i in range(n):
+            for j in range(n):
+                if i == j:
+                    clone[i][j] = 0
+                elif self.matriz[i][j] != {}:
+                    pesos = [self.matriz[i][j][k].peso for k in self.matriz[i][j]]
+
+                    if any(p < 0 for p in pesos):
+                        return False
+                    else:
+                        clone[i][j] = min(pesos)
+
+        #lista de prioridade, vai receber tupla com peso e rotulo
+        listapri = []
+
+        #usando heapq para sempre priorizar a aresta de menor peso
+        heapq.heappush(listapri, (0, Vi))
+        
+        #Dicionario com vertices visitados, o Valor de cada chave é o peso acumulado para chegar no vertice, e o seu pai
+        visitados = {Vi: (0, None)}
+
+        #enquanto tiver vertices para acessar
+        while listapri:
+
+            peso_atual, Va_rotulo = heapq.heappop(listapri)
+
+            #Se chegou no destino
+            if Va_rotulo == Vf:
+                break
+
+            # Se encontra um custo maior do que o ja registrado, pula
+            if peso_atual > visitados[Va_rotulo][0]:
+                continue
+ 
+            x = self.indice_do_vertice(self.get_vertice(Va_rotulo))
+
+            for i in range(n):
+
+                peso_aresta = clone[x][i]
+                
+                #se tiver uma aresta para outro vertice..
+                if peso_aresta != float('inf') and x != i:
+
+                    vert = self.vertices[i].rotulo
+                    novo_peso = peso_atual + peso_aresta
+
+                    # Não descarto vertices ja visitados, pois Se for um caminho com menos peso para alcançar o vértice, atualizo
+                    if vert not in visitados or novo_peso < visitados[vert][0]:
+                        visitados[vert] = (novo_peso, Va_rotulo)
+                        heapq.heappush(listapri, (novo_peso, vert))
+
+        
+        if Vf in visitados:
+            #Construir o caminho percorrendo antecessores do Vertice Final alcançado
+            caminho = []
+            v_atual = Vf
+            while (v_atual is not None):
+                caminho.append(v_atual)
+                v_atual = visitados[v_atual][1] 
             
+            caminho.reverse()
+            return caminho
+        else:
+            return []
+            
+        
+
+
+
+
+
+
+
+        
+
+
+
         

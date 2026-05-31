@@ -87,6 +87,7 @@ class MeuGrafo(GrafoListaAdjacenciaNaoDirecionado):
                 lista.add(self.arestas[i].rotulo)
         return lista
 
+
     def eh_completo(self):
         '''
         Verifica se o grafo é completo.
@@ -95,18 +96,16 @@ class MeuGrafo(GrafoListaAdjacenciaNaoDirecionado):
         if((len(self.vertices_nao_adjacentes())) == 0):
             return True
         return False
-        '''for i in self.vertices:
-            for j in self.vertices:
-                if j != i:
-                    if not self.ha_aresta(str(i), str(j)):
-                        return False
-        return True'''
+
 
     def eh_conexo(self):
+
+        #Grafos de 1 e 0 vertices são conexos
         if (len(self.vertices) == 0 or len(self.vertices) == 1):
             return True
         visitados = set()
         self.recDfs(self.vertices[0].rotulo, visitados)
+        #Se visitar todos os vertices atraves da busca, é conexo
         return (len(visitados) == len(self.vertices))
 
     def recDfs(self, V, visitados):
@@ -124,10 +123,11 @@ class MeuGrafo(GrafoListaAdjacenciaNaoDirecionado):
                 self.recDfs(vert, visitados)
         return visitados
 
+
     def ha_ciclo(self):
-        #Algoritmos de busca em profundidade retorna uma arvore
         a_visitados = set()
         v_visitados = set()
+        #percorro para não retornar resultado errado para grafos desconexos
         for V in self.vertices:
             V = V.rotulo
             if V not in v_visitados:
@@ -147,16 +147,20 @@ class MeuGrafo(GrafoListaAdjacenciaNaoDirecionado):
                     vert = self.get_aresta(i).v2.rotulo
                 else:
                     vert = self.get_aresta(i).v1.rotulo
+                
+                #voltou para o mesmo vertice(ciclo)
                 if vert in v_visitados:
                     return True
                 else:
                     a_visitados.add(i)
                     v_visitados.add(vert)
-                    if(self.recDfs_ciclo(vert,v_visitados, a_visitados) == True):
+                    #realiza a recursão e interrompe todo o fluxo se encontrar um ciclo 
+                    if(self.recDfs_ciclo(vert,v_visitados, a_visitados)):
                         return True
 
+
     def folhas_rotulos(self):
-        #Algoritmos de busca em profundidade retorna uma arvore
+        
         visitados = set()
         folhas = set()
         if(len(self.vertices) == 0):
@@ -168,22 +172,24 @@ class MeuGrafo(GrafoListaAdjacenciaNaoDirecionado):
         visitados.add(V)
         return self.recDfs2(V, visitados, folhas)
     
-    def recDfs2(self, V, visitados, folhas):
+    def recDfsFolhas(self, V, visitados, folhas):
         arestas_rotulos = self.arestas_sobre_vertice(V)
-        #percorrer a lista de rotulos dos vertices adjacentes ao vertice atual
+        #verificar se folha tem grau 1
         if (len(arestas_rotulos) == 1):
             folhas.add(V)
+
+        #percorrer a lista de rotulos dos vertices adjacentes ao vertice atual
         for i in arestas_rotulos:
             #Condição para não usar o mesmo vertice da aresta, que acabei de visitar
             if(self.get_aresta(i).v1.rotulo == V):
                 vert = self.get_aresta(i).v2.rotulo
             else:
                 vert = self.get_aresta(i).v1.rotulo
+
             if vert not in visitados:
                 visitados.add(vert)
-                folhas = self.recDfs2(vert, visitados, folhas)
+                folhas = self.recDfsFolhas(vert, visitados, folhas)
         return folhas
-
 
     def eh_arvore(self):
         '''
@@ -191,6 +197,7 @@ class MeuGrafo(GrafoListaAdjacenciaNaoDirecionado):
         '''
         if not self.eh_conexo():
             return False
+        
         if self.ha_ciclo():
             return False
         return self.folhas_rotulos()
@@ -198,6 +205,7 @@ class MeuGrafo(GrafoListaAdjacenciaNaoDirecionado):
 
     def eh_bipartido(self):
         v_visitados = set()
+        #percorro para não retornar resultado errado para grafos desconexos
         for i in self.vertices: 
             V = i.rotulo
             if V not in v_visitados:     
@@ -205,20 +213,26 @@ class MeuGrafo(GrafoListaAdjacenciaNaoDirecionado):
                 vermelho = set()
                 a_visit = set()
                 preto.add(V)
+                #Finaliza retornando, apenas se não for bipartido, pois pode ser necessario conferir os subgrafos
                 if not self.rec_bipartido(V, vermelho, preto, a_visit, v_visitados):
                     return False
         return True
+    
     def rec_bipartido(self, V, vermelho, preto, a_visi, v_visitados):
         arestas_rotulo = self.arestas_sobre_vertice(V)
         for i in arestas_rotulo:
             if(i not in a_visi):
+
                 a_visi.add(i)
                 if(self.get_aresta(i).v1.rotulo == V):
                     vert = self.get_aresta(i).v2.rotulo
                 else:
                     vert = self.get_aresta(i).v1.rotulo
+
                 if vert not in v_visitados:
                     v_visitados.add(vert)
+                
+                #Dividindo em dois conjuntos, colocando os filhos no conjunto oposto do Vertice Pai, retorna Falso se tiver adjacencia Invalida
                 if(V in preto):
                     if (vert in preto):
                         return False
@@ -231,7 +245,7 @@ class MeuGrafo(GrafoListaAdjacenciaNaoDirecionado):
                     elif (vert in preto):
                         continue
                     preto.add(vert)
-                
+                #realiza a recursão e interrompe todo o fluxo se encontrar um False 
                 if not self.rec_bipartido(vert, vermelho, preto, a_visi, v_visitados):
                     return False
         return True

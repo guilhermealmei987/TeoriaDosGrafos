@@ -74,7 +74,8 @@ class TestGrafo(unittest.TestCase):
         self.g_e.adiciona_aresta('8', 'D', 'E')
         self.g_e.adiciona_aresta('9', 'E', 'A')
         self.g_e.adiciona_aresta('11', 'E', 'B')
-        a, b, c, d = Vertice('A'), Vertice('B'), Vertice('C'), Vertice('D')
+        
+        a, b, c, d, e, f = Vertice('A'), Vertice('B'), Vertice('C'), Vertice('D'), Vertice('E'), Vertice('F')
 
         self.w = GrafoBuilder().tipo(MeuGrafo()).vertices(3).build()
         self.w2 = GrafoBuilder().tipo(MeuGrafo()).vertices(1).build() 
@@ -103,15 +104,30 @@ class TestGrafo(unittest.TestCase):
         self.m_n4 = (GrafoBuilder().tipo(MeuGrafo())
                .vertices([a, b, c])
                .arestas([ArestaDirecionada('a1', a, b, 4), ArestaDirecionada('a2', b, a, 1), ArestaDirecionada('a3', b, c, 2)]).build())
+        self.m_n5 = GrafoBuilder().tipo(MeuGrafo()).vertices([a, b, c]).build()
+        self.m_n6 = GrafoBuilder().tipo(MeuGrafo()).vertices([a]).build()
+        self.m_n7 = (GrafoBuilder().tipo(MeuGrafo())
+             .vertices([a, b])
+             .arestas([
+                 ArestaDirecionada('a1', a, b, 15), 
+                 ArestaDirecionada('a2', a, b, 3)]).build())
         
         
     def test_menor_caminho(self):
+        self.assertFalse(self.m_n.menor_caminho('A', 'A')) #Retorna Falsa pois tem aresta negativa, mesmo querendo ir de A -> A
         self.assertFalse(self.m_n.menor_caminho('A', 'A')) #peso negativo
         self.assertEqual(self.m_n2.menor_caminho('A', 'C'), []) #inalcancavel
-        self.assertEqual(self.m_n2.menor_caminho('A', 'C'), ['A', 'B', 'C']) #deve escolher atalho
+        self.assertEqual(self.m_n3.menor_caminho('A', 'C'), ['A', 'B', 'C']) #deve escolher atalho
         self.assertEqual(self.m_n4.menor_caminho('A', 'C'), ['A', 'B', 'C'])#caminho com ciclo
-
-
+        #Testes com Vertices nao presentes no grafo em diferentes posicoes
+        with self.assertRaises(VerticeInvalidoError):
+            self.m_n5.menor_caminho('A', 'D')
+        with self.assertRaises(VerticeInvalidoError):
+            self.m_n5.menor_caminho('D', 'B')
+        with self.assertRaises(VerticeInvalidoError):
+            self.m_n5.menor_caminho('D', 'E')
+        self.assertEqual(self.m_n6.menor_caminho('A', 'A'), ['A'])
+        self.assertEqual(self.m_n7.menor_caminho('A', 'B'), ['A', 'B'])
 
     def test_warshall(self):
         self.assertEqual(self.w.warshall(), [
