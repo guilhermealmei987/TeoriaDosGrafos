@@ -65,4 +65,23 @@ class MeuGrafo(GrafoMatrizAdjacenciaDirecionado):
         Provê a matriz de alcançabilidade de Warshall do grafo
         :return: Uma lista de listas que representa a matriz de alcançabilidade de Warshall associada ao grafo
         '''
-        pass
+        n = len(self.vertices)
+        clone = [[0 for _ in range(n)] for _ in range(n)]
+        for i in range(n):
+            for j in range(n):
+                #se existe aresta
+                if (self.matriz[i][j] != {}):
+                    clone[i][j] = 1
+        for i in range(n):
+            for j in range(n):
+                if clone[j][i] == 1:
+                    for k in range(n):
+                        clone[j][k] = max(clone[j][k], clone[i][k])
+        return clone
+    
+    def menor_caminho(self, Vi, Vf):
+        for i in self.arestas:
+            if (i.peso < 0):
+                return False
+            
+        

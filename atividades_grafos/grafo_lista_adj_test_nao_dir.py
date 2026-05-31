@@ -75,79 +75,80 @@ class TestGrafo(unittest.TestCase):
         # Grafo p\teste de remoção em casta
         self.g_r = GrafoBuilder().tipo(MeuGrafo()).vertices(2).arestas(1).build()
 
+        a, b, c, d, e = Vertice('A'), Vertice('B'), Vertice('C'), Vertice('D'), Vertice('E')
         #Grafo Eh_bipartido
         self.e_b = GrafoBuilder().tipo(MeuGrafo()).vertices(4).build()
         self.e_b2 = GrafoBuilder().tipo(MeuGrafo()).vertices(1).build() 
         self.e_b3 = GrafoBuilder().tipo(MeuGrafo()) \
-            .vertices([a:=Vertice('A'), b:=Vertice('B'), c:=Vertice('C'), d:=Vertice('D')]) \
+            .vertices([a, b, c, d]) \
             .arestas([Aresta('ab', a, b), Aresta('bc', b, c), Aresta('cd', c, d), Aresta('da', d, a)]).build()
         self.e_b4 = GrafoBuilder().tipo(MeuGrafo()) \
-            .vertices([a:=Vertice('A'), b:=Vertice('B'), c:= Vertice('C'), d:=Vertice('D'), e:=Vertice('E')]) \
+            .vertices([a, b, c, d, e]) \
             .arestas([Aresta('ab', a, b), Aresta('bc', b, c), Aresta('de', d, e)]).build()
         self.e_b5 = GrafoBuilder().tipo(MeuGrafo()) \
-            .vertices([a:=Vertice('A'), b:=Vertice('B'), c:= Vertice('C'), d:= Vertice('D'), e:= Vertice('E')]) \
+            .vertices([a, b, c, d, e]) \
             .arestas([Aresta('ab', a, b), Aresta('cd', c, d), Aresta('ce', c, e), Aresta('de', d, e)]).build()
         self.e_b6 = GrafoBuilder().tipo(MeuGrafo()) \
-            .vertices([a:=Vertice('A'), b:=Vertice('B'), c:=Vertice('C'), d:=Vertice('D'), e:=Vertice('E')]) \
+            .vertices([a, b, c, d, e]) \
             .arestas([Aresta('ab', a, b), Aresta('bc', b, c), Aresta('cd', c, d), Aresta('de', d, e), Aresta('ae', a, e)]).build()
         self.e_b7 = GrafoBuilder().tipo(MeuGrafo()) \
             .vertices(3).arestas(True).build()
         self.e_b8 = GrafoBuilder().tipo(MeuGrafo()).build()
         self.e_b9 = GrafoBuilder().tipo(MeuGrafo()) \
-            .vertices([a:=Vertice('A'), b:=Vertice('B')]) \
+            .vertices([a, b]) \
             .arestas([Aresta('ab', a, b), Aresta('ba', b, a)]).build()
-        self.e_b10 = GrafoBuilder().tipo(MeuGrafo()).vertices([a:=Vertice('A')]).arestas([Aresta('aa', a, a)]).build()
+        self.e_b10 = GrafoBuilder().tipo(MeuGrafo()).vertices([a]).arestas([Aresta('aa', a, a)]).build()
   
         self.h_c = GrafoBuilder().tipo(MeuGrafo()).vertices(1).build()
-        self.h_c2 = GrafoBuilder().tipo(MeuGrafo()).vertices([a:=Vertice('A')]).arestas([Aresta('aa', a, a)]).build()
+        self.h_c2 = GrafoBuilder().tipo(MeuGrafo()).vertices([a]).arestas([Aresta('aa', a, a)]).build()
         self.h_c3 = GrafoBuilder().tipo(MeuGrafo()) \
-            .vertices([a:=Vertice('A'), b:=Vertice('B'), c:=Vertice('C')]) \
+            .vertices([a, b, c]) \
             .arestas([Aresta('ab', a, b), Aresta('bc', b, c), Aresta('ca', c, a)]).build()
         self.h_c4 = GrafoBuilder().tipo(MeuGrafo()) \
-            .vertices([a:=Vertice('A'), b:=Vertice('B')]) \
+            .vertices([a, b]) \
             .arestas([Aresta('ab', a, b), Aresta('ba', b, a)]).build()
         self.h_c5 = GrafoBuilder().tipo(MeuGrafo()) \
-            .vertices([a:=Vertice('A'), b:=Vertice('B'), c:= Vertice('C'), d:=Vertice('D'), e:=Vertice('E')]) \
+            .vertices([a, b, c, d, e]) \
             .arestas([Aresta('ab', a, b), Aresta('bc', b, c), Aresta('de', d, e)]).build()
         self.h_c6 = GrafoBuilder().tipo(MeuGrafo()).build()
         self.h_c7 = GrafoBuilder().tipo(MeuGrafo()) \
-            .vertices([a:=Vertice('A'), b:=Vertice('B'), c:= Vertice('C'), d:=Vertice('D'), e:=Vertice('E')]) \
+            .vertices([a, b, c, d, e]) \
             .arestas([Aresta('ab', a, b), Aresta('cd', c, d), Aresta('de', d, e), Aresta('ec', e, c)]).build()
         self.h_c8 = GrafoBuilder().tipo(MeuGrafo()) \
             .vertices(3).arestas(True).build()
         self.h_c9 = GrafoBuilder().tipo(MeuGrafo()) \
-            .vertices([a:=Vertice('A'), b:=Vertice('B'), c:=Vertice('C'), d:=Vertice('D')]) \
+            .vertices([a, b, c, d]) \
             .arestas([Aresta('ab', a, b), Aresta('bc', b, c), Aresta('ad', a, d), Aresta('bb', b, b)]).build()
         self.h_c10 = GrafoBuilder().tipo(MeuGrafo()) \
-            .vertices([a:=Vertice('A'), b:=Vertice('B'), c:= Vertice('C'), d:=Vertice('D'), e:=Vertice('E')]) \
+            .vertices([a, b, c, d, e]) \
             .arestas([Aresta('ab', a, b), Aresta('bc', b, c), Aresta('cd', c, d), Aresta('de', d, e)]).build()
         
         self.e_a = GrafoBuilder().tipo(MeuGrafo()) \
-            .vertices([a:=Vertice('A'), b:=Vertice('B'), c:=Vertice('C')]) \
+            .vertices([a, b, c]) \
             .arestas([Aresta('ab', a, b), Aresta('bc', b, c), Aresta('ca', c, a)]).build()
         self.e_a2 = GrafoBuilder().tipo(MeuGrafo()) \
-            .vertices([a:=Vertice('A'), b:=Vertice('B'), c:=Vertice('C'), d:=Vertice('D')]) \
+            .vertices([a, b, c, d]) \
             .arestas([Aresta('ab', a, b), Aresta('bc', b, c), Aresta('ad', a, d)]).build()
         self.e_a3 = GrafoBuilder().tipo(MeuGrafo()) \
-            .vertices([a:=Vertice('A'), b:=Vertice('B'), c:=Vertice('C'), d:=Vertice('D')]) \
+            .vertices([a, b, c, d]) \
             .arestas([Aresta('ab', a, b), Aresta('cd', c, d)]).build()
         self.e_a4 = GrafoBuilder().tipo(MeuGrafo()) \
-            .vertices([a:=Vertice('A'), b:=Vertice('B'), c:=Vertice('C'), d:=Vertice('D')]) \
+            .vertices([a, b, c, d]) \
             .arestas([Aresta('ab', a, b), Aresta('bc', b, c)]).build()
-        self.e_a5 = GrafoBuilder().tipo(MeuGrafo()).vertices([a:=Vertice('A')]).arestas([Aresta('aa', a, a)]).build()
+        self.e_a5 = GrafoBuilder().tipo(MeuGrafo()).vertices([a]).arestas([Aresta('aa', a, a)]).build()
         self.e_a6 = GrafoBuilder().tipo(MeuGrafo()) \
-            .vertices([a:=Vertice('A'), b:=Vertice('B'), c:=Vertice('C'), d:=Vertice('D')]) \
+            .vertices([a, b, c, d]) \
             .arestas([Aresta('ab', a, b), Aresta('bc', b, c), Aresta('ad', a, d), Aresta('bb', b, b)]).build()
-        self.e_a7 = GrafoBuilder().tipo(MeuGrafo()).vertices([a:=Vertice('A')]).build()
-        self.e_a8 = GrafoBuilder().tipo(MeuGrafo()).vertices([a:=Vertice('A'), b:= Vertice('B')]).arestas(1).build()
+        self.e_a7 = GrafoBuilder().tipo(MeuGrafo()).vertices([a]).build()
+        self.e_a8 = GrafoBuilder().tipo(MeuGrafo()).vertices([a, b]).arestas(1).build()
         self.e_a9 = GrafoBuilder().tipo(MeuGrafo()) \
-            .vertices([a:=Vertice('A'), b:=Vertice('B')]) \
+            .vertices([a, b]) \
             .arestas([Aresta('ab', a, b), Aresta('ba', b, a)]).build()
         self.e_a10 = GrafoBuilder().tipo(MeuGrafo()) \
-            .vertices([a:=Vertice('A'), b:=Vertice('B'), c:= Vertice('C'), d:=Vertice('D'), e:=Vertice('E')]) \
+            .vertices([a, b, c, d, e]) \
             .arestas([Aresta('ab', a, b), Aresta('bc', b, c), Aresta('cd', c, d), Aresta('de', d, e)]).build()
         self.e_a11 = GrafoBuilder().tipo(MeuGrafo()) \
-            .vertices([a:=Vertice('A'), b:=Vertice('B'), c:= Vertice('C'), d:=Vertice('D'), e:=Vertice('E'), f:=Vertice('F'), g:=Vertice('G'), h:=Vertice('H'), i:= Vertice('I'), j:=Vertice('J')]) \
+            .vertices([a, b, c, d, e, f:=Vertice('F'), g:=Vertice('G'), h:=Vertice('H'), i:= Vertice('I'), j:=Vertice('J')]) \
             .arestas([Aresta('ab', a, b), Aresta('gb', g, b), Aresta('hb', h, b), Aresta('be', b, e), Aresta('bc', b, c), Aresta('cd', c, d), Aresta('df', d, f), Aresta('hi', h, i), Aresta('hj', h, j)]).build()
         
         

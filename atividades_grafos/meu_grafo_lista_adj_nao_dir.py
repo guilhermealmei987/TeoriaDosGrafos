@@ -165,8 +165,6 @@ class MeuGrafo(GrafoListaAdjacenciaNaoDirecionado):
             visitados.add(self.vertices[0].rotulo)
             return visitados
         V = self.vertices[0].rotulo
-        if not (self.existe_rotulo_vertice(V)):
-            raise VerticeInvalidoError
         visitados.add(V)
         return self.recDfs2(V, visitados, folhas)
     
@@ -199,17 +197,18 @@ class MeuGrafo(GrafoListaAdjacenciaNaoDirecionado):
 
 
     def eh_bipartido(self):
+        v_visitados = set()
         for i in self.vertices: 
             V = i.rotulo
-            preto = set()
-            vermelho = set()
-            a_visit = set()
-            preto.add(V)
-            if not self.rec_bipartido(V, vermelho, preto, a_visit):
-                return False
+            if V not in v_visitados:     
+                preto = set()
+                vermelho = set()
+                a_visit = set()
+                preto.add(V)
+                if not self.rec_bipartido(V, vermelho, preto, a_visit, v_visitados):
+                    return False
         return True
-
-    def rec_bipartido(self, V, vermelho, preto, a_visi):
+    def rec_bipartido(self, V, vermelho, preto, a_visi, v_visitados):
         arestas_rotulo = self.arestas_sobre_vertice(V)
         for i in arestas_rotulo:
             if(i not in a_visi):
@@ -218,6 +217,8 @@ class MeuGrafo(GrafoListaAdjacenciaNaoDirecionado):
                     vert = self.get_aresta(i).v2.rotulo
                 else:
                     vert = self.get_aresta(i).v1.rotulo
+                if vert not in v_visitados:
+                    v_visitados.add(vert)
                 if(V in preto):
                     if (vert in preto):
                         return False
@@ -230,7 +231,8 @@ class MeuGrafo(GrafoListaAdjacenciaNaoDirecionado):
                     elif (vert in preto):
                         continue
                     preto.add(vert)
-                if not self.rec_bipartido(vert, vermelho, preto, a_visi):
+                
+                if not self.rec_bipartido(vert, vermelho, preto, a_visi, v_visitados):
                     return False
         return True
 

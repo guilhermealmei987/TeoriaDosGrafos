@@ -74,7 +74,66 @@ class TestGrafo(unittest.TestCase):
         self.g_e.adiciona_aresta('8', 'D', 'E')
         self.g_e.adiciona_aresta('9', 'E', 'A')
         self.g_e.adiciona_aresta('11', 'E', 'B')
+        a, b, c, d = Vertice('A'), Vertice('B'), Vertice('C'), Vertice('D')
 
+        self.w = GrafoBuilder().tipo(MeuGrafo()).vertices(3).build()
+        self.w2 = GrafoBuilder().tipo(MeuGrafo()).vertices(1).build() 
+        self.w3 = GrafoBuilder().tipo(MeuGrafo()).build()
+        self.w4 = GrafoBuilder().tipo(MeuGrafo()).vertices([a, b, c]) \
+            .arestas([ArestaDirecionada('ba', b, a), ArestaDirecionada('ab', a, b), ArestaDirecionada('ac', a, c), ArestaDirecionada('ca', c, a), ArestaDirecionada('bc', b, c), ArestaDirecionada('cb', c, b)]).build()
+        self.w5 = (GrafoBuilder().tipo(MeuGrafo())
+                .vertices([a, b, c])
+                .arestas([ArestaDirecionada('a1', a, b),ArestaDirecionada('a2', b, c)]).build())
+        self.w6 = (GrafoBuilder().tipo(MeuGrafo())
+              .vertices([a, b])
+              .arestas([ArestaDirecionada('a1', a, b), ArestaDirecionada('a2', b, b)]).build())
+        self.w7 = (GrafoBuilder().tipo(MeuGrafo())
+               .vertices([a, b, c, d])
+               .arestas([ArestaDirecionada('a1', a, b), ArestaDirecionada('a2', b, c), ArestaDirecionada('a3', c, d)]).build())
+        
+        self.m_n = (GrafoBuilder().tipo(MeuGrafo())
+                  .vertices([a, b])
+                  .arestas([ArestaDirecionada('a1', a, b, -5)]).build())
+        self.m_n2 = (GrafoBuilder().tipo(MeuGrafo())
+                   .vertices([a, b, c])
+                   .arestas([ArestaDirecionada('a1', a, b, 5)]).build())
+        self.m_n3 = (GrafoBuilder().tipo(MeuGrafo())
+                .vertices([a, b, c])
+                .arestas([ArestaDirecionada('a1', a, c, 10), ArestaDirecionada('a2', a, b, 2), ArestaDirecionada('a3', b, c, 3)]).build())
+        self.m_n4 = (GrafoBuilder().tipo(MeuGrafo())
+               .vertices([a, b, c])
+               .arestas([ArestaDirecionada('a1', a, b, 4), ArestaDirecionada('a2', b, a, 1), ArestaDirecionada('a3', b, c, 2)]).build())
+        
+        
+    def test_menor_caminho(self):
+        self.assertFalse(self.m_n.menor_caminho('A', 'A')) #peso negativo
+        self.assertEqual(self.m_n2.menor_caminho('A', 'C'), []) #inalcancavel
+        self.assertEqual(self.m_n2.menor_caminho('A', 'C'), ['A', 'B', 'C']) #deve escolher atalho
+        self.assertEqual(self.m_n4.menor_caminho('A', 'C'), ['A', 'B', 'C'])#caminho com ciclo
+
+
+
+    def test_warshall(self):
+        self.assertEqual(self.w.warshall(), [
+                                            [0, 0, 0],
+                                            [0, 0, 0],
+                                            [0, 0, 0]])   
+        self.assertEqual(self.w2.warshall(), [[0]])
+        self.assertEqual(self.w3.warshall(), [])
+        self.assertEqual(self.w4.warshall(), [
+                                            [1, 1, 1], 
+                                            [1, 1, 1], 
+                                            [1, 1, 1]])
+        self.assertEqual(self.w5.warshall(), [
+                                            [0, 1, 1],
+                                            [0, 0, 1],
+                                            [0, 0, 0]])
+        self.assertEqual(self.w6.warshall(), [[0,1], [0,1]])
+        self.assertEqual(self.w7.warshall(),[[0, 1, 1, 1],
+                                            [0, 0, 1, 1], 
+                                            [0, 0, 0, 1], 
+                                            [0, 0, 0, 0]])
+        
     def test_adiciona_aresta(self):
         self.assertTrue(self.g_p.adiciona_aresta('a10', 'J', 'C'))
         a = ArestaDirecionada("zxc", self.g_p.get_vertice("C"), self.g_p.get_vertice("Z"))
