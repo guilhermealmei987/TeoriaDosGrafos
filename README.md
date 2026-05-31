@@ -1,2 +1,2 @@
 # TeoriaDosGrafos
-Funções desenvolvidas na disciplina de teoria dos grafos
+Funções e testes desenvolvidos na disciplina de teoria dos grafos
