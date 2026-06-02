@@ -170,7 +170,7 @@ class MeuGrafo(GrafoListaAdjacenciaNaoDirecionado):
             return visitados
         V = self.vertices[0].rotulo
         visitados.add(V)
-        return self.recDfs2(V, visitados, folhas)
+        return self.recDfsFolhas(V, visitados, folhas)
     
     def recDfsFolhas(self, V, visitados, folhas):
         arestas_rotulos = self.arestas_sobre_vertice(V)
